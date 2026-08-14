@@ -49,26 +49,6 @@ public Personal(String tipoDocumento, String numeroDocumento, String nombre, Str
         return telefono;
     }
 //setters
- public void setTipoDocumento(String tipoDocumento) {
-        this.tipoDocumento = tipoDocumento;
-    }
- 
-    public void setNumeroDocumento(String numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
-    }
- 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
- 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
- 
-    public void setGenero(char genero) {
-        this.genero = genero;
-    }
- 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }

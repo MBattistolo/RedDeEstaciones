@@ -17,10 +17,6 @@ public class MedicionAire extends Medicion {
         return tipoContaminante;
     }
 
-    public void setTipoContaminante(TipoContaminante tipoContaminante) {
-        this.tipoContaminante = tipoContaminante;
-    }
-
     @Override
     public String toString() {
         return "Codigo: " + codigo

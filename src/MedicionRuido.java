@@ -16,6 +16,10 @@ public class MedicionRuido  extends Medicion {
     public Jornada getJornada() {
         return jornada;
     }
+    
+    public void setJornada(Jornada jornada) {
+    	this.jornada = jornada;
+    }
 
     @Override
     public String toString() {

@@ -29,14 +29,6 @@ public double getValorMaximo() {
 return valorMaximo;
 }
 
-public void setCodigo(String codigo) {
-this.codigo = codigo;
-}
-
-public void setNombreContaminante(String nombreContaminante) {
-this.nombreContaminante = nombreContaminante;
-}
-
 public void setValorMinimo(double valorMinimo) {
 this.valorMinimo = valorMinimo;
 }

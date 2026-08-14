@@ -45,32 +45,16 @@ public class Estacion {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
     public String getNombre() {
         return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public String getComuna() {
         return comuna;
     }
 
-    public void setComuna(String comuna) {
-        this.comuna = comuna;
-    }
-
     public LocalDate getFechaInstalacion() {
         return fechaInstalacion;
-    }
-
-    public void setFechaInstalacion(LocalDate fechaInstalacion) {
-        this.fechaInstalacion = fechaInstalacion;
     }
 
     public Medicion[] getMediciones() {

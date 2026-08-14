@@ -18,17 +18,13 @@ public abstract class Medicion {
     public String getCodigo() {
         return codigo;
     }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    
+    public Personal getTecnicoRegistro() {
+    	return tecnicoRegistro;
     }
 
     public LocalDate getFecha() {
         return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
     }
 
     public double getValorMedido() {
