@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 import java.util.*;
-import java.io.Serializable;
+import java.io.*;
 
 public class Red implements Serializable{
 	
@@ -16,6 +16,17 @@ public class Red implements Serializable{
 		this.estaciones = new Estacion[0];
 		this.mediciones = new Medicion[0];
 		this.personal = new Personal[0];
+	}
+	
+	//constructor sobrecargado que recupera una red guardada previamente en un fichero serializado, como en Java no se puede hacer this = r, 
+	//se lee el objeto del fichero y se copian sus cuatro arreglos al objeto que se esta construyendo
+	public Red(String dir) throws ClassNotFoundException, IOException {
+	    Red r = leerFicheroRed(dir);
+
+	    this.tiposContaminante = r.tiposContaminante;
+	    this.estaciones = r.estaciones;
+	    this.mediciones = r.mediciones;
+	    this.personal = r.personal;
 	}
 	
 	//en esta sección van todos los métodos de buscar, todos estos siguen la misma lógica de usar un while para la búsqueda del índice
@@ -233,9 +244,9 @@ public class Red implements Serializable{
 	}
 	
 	public void eliminarPersonal(String codigo) throws ECodigoNoExiste, EPersonalConMediciones{
-	//En este método se elimina el personal, sin embargo para poder ser eliminado debe pasar por dos validaciones, la primera que exista
-	//para la segunda validación vamos a trabajar bajo el supuesto de que un empleado que haya realizado al menos una medicion no puede ser borrado
-	//ya que es como si no estuviese haciendo nada y lo queremos expulsar 
+		//En este método se elimina el personal, sin embargo para poder ser eliminado debe pasar por dos validaciones, la primera que exista,
+		//para la segunda validación vamos a trabajar bajo el supuesto de que un empleado que haya registrado al menos una medicion no puede
+		//ser borrado, ya que sus mediciones forman parte del historico del sistema y deben conservar la referencia a quien las tomo
 	
 		//primera validación la cuál se encarga de que el empleado exista llamando al método buscar personal
 		Integer i = buscarPersonal(codigo);
@@ -357,6 +368,162 @@ public class Red implements Serializable{
 		return estacionesCriticas;
 	}
 
+	
+	//en esta seccion van los cuatro lectores de ficheros de texto. todos son privados, porque solo tienen sentido llamados desde cargarDesdeTexto,
+	//que garantiza el orden, si se cargaran las mediciones antes que el personal o los contaminantes, todas las, lineas rebotarian porque 
+	//referencian objetos que aun no existen. los tres primeros, comparten el mismo esqueleto: leer linea, saltar si esta vacia, partir por ; y 
+	//delegar en el add correspondiente. el lector no valida ni crea objetos, de eso se encarga el add
+
+	//este lector es el mas simple porque todos los campos van directo al add, solo hay que convertir los dos ultimos de texto a numero
+	private void cargarContaminantes(String ruta) throws IOException, ECodigoDuplicado {
+
+	    FileReader fr = new FileReader(ruta);
+	    BufferedReader br = new BufferedReader(fr);
+	    String linea;
+
+	    //readLine devuelve null cuando se acaba el fichero, por eso esa es la condicion de salida
+	    while ((linea = br.readLine()) != null) {
+	        //el isBlank evita que la linea en blanco del final del fichero rompa el split
+	        if (!linea.isBlank()) {
+	            String[] c = linea.split(";");
+	            //todo lo que sale de un fichero de texto es String, de ahi el parseDouble
+	            addTipoContaminante(c[0], c[1], Double.parseDouble(c[2]), Double.parseDouble(c[3]));
+	        }
+	    }
+	    //se cierra en orden inverso a como se abrio, primero la capa de arriba
+	    br.close();
+	    fr.close();
+	}
+
+	//mismo esqueleto del anterior, la unica diferencia es el charAt(0) del genero
+	private void cargarPersonal(String ruta) throws IOException, ECodigoDuplicado {
+
+	    FileReader fr = new FileReader(ruta);
+	    BufferedReader br = new BufferedReader(fr);
+	    String linea;
+
+	    while ((linea = br.readLine()) != null) {
+	        if (!linea.isBlank()) {
+	            String[] c = linea.split(";");
+	            //addPersonal recibe el genero como char, por eso se toma el primer caracter
+	            addPersonal(c[0], c[1], c[2], c[3], c[4].charAt(0), c[5], c[6]);
+	        }
+	    }
+	    br.close();
+	    fr.close();
+	}
+
+	//mismo esqueleto, aca lo particular es la conversion de la fecha
+	private void cargarEstaciones(String ruta) throws IOException, ECodigoDuplicado {
+
+	    FileReader fr = new FileReader(ruta);
+	    BufferedReader br = new BufferedReader(fr);
+	    String linea;
+
+	    while ((linea = br.readLine()) != null) {
+	        if (!linea.isBlank()) {
+	            String[] c = linea.split(";");
+
+	            addEstacion(c[0], c[1], c[2], LocalDate.parse(c[3]));
+	        }
+	    }
+	    br.close();
+	    fr.close();
+	}
+
+	//este es el unico lector que rompe el patron de los otros tres por dos razones: es el unico fichero que guarda dos clases distintas, y es el 
+	//unico cuyas lineas referencian objetos que ya existen en la red, por lo que hay que buscarlos antes de llamar al add
+	//va con try/finally porque tiene salidas anticipadas por excepcion y sin el los ficheros quedarian abiertos
+	private void cargarMediciones(String ruta) throws IOException, ECodigoDuplicado, ECodigoNoExiste {
+
+	    FileReader fr = null;
+	    BufferedReader br = null;
+
+	    try {
+	        fr = new FileReader(ruta);
+	        br = new BufferedReader(fr);
+	        String linea;
+
+	        while ((linea = br.readLine()) != null) {
+
+	            if (!linea.isBlank()) {
+
+	                String[] c = linea.split(";");
+	                // c[0]=tipo (este tipo se agrega a la hora de describir el fichero ya que no es un parámetro ingresado por constructor)
+	                // c[1]=codMedicion  c[2]=codEstacion  c[3]=documento
+	                // c[4]=fecha c[5]=valor        c[6]=contaminante o jornada (depende de la medición)
+
+	                //el fichero guarda el documento del tecnico, pero el add pide el objeto, como este metodo vive dentro de Red se accede a 
+	                //personal[p] directamente
+	                Integer p = buscarPersonal(c[3]);
+	                if (p == null) {
+	                    throw new ECodigoNoExiste("personal", c[3]);
+	                }
+
+	                LocalDate fecha = LocalDate.parse(c[4]);
+	                double valor = Double.parseDouble(c[5]);
+
+	                //ese primer campo determina cual de las dos subclases hay que crear. no es un atributo de la medicion sino informacion del
+	                //formato del fichero: el texto no guarda tipos, entonces sin el no se sabria a cual add llamar
+	                if (c[0].equals("AIRE")) {
+
+	                    //la busqueda del contaminante va dentro de esta rama y no arriba, porque en una linea de ruido c[6] es la jornada y no un 
+	                	//codigo
+	                    Integer t = buscarTipoContaminante(c[6]);
+	                    if (t == null) {
+	                        throw new ECodigoNoExiste("tipo de contaminante", c[6]);
+	                    }
+	                    addMedicionAire(c[2], c[1], personal[p], fecha, valor, tiposContaminante[t]);
+
+	                } else if (c[0].equals("RUIDO")) {
+
+	                    //valueOf exige que el texto coincida exacto con la constante del enum, por eso en el fichero las jornadas van en mayuscula
+	                    addMedicionRuido(c[2], c[1], personal[p], fecha, valor, Jornada.valueOf(c[6]));
+	                }
+	            }
+	        }
+
+	    } finally {
+	        //el finally se ejecuta siempre, incluso saliendo por cualquiera de los throw
+	        if (br != null) {
+	            br.close();
+	            fr.close();
+	        }
+	    }
+	}
+	
+	//metodo publico que orquesta la carga desde los cuatro ficheros de texto, el orden importa ya que mediciones va de ultima porque referencia
+	//al personal y a los tipos de contaminante que ya deben estar cargados
+	public void cargarDesdeTexto(String carpeta) throws IOException, ECodigoDuplicado, ECodigoNoExiste {
+
+	    cargarContaminantes(carpeta + "/contaminantes.txt");
+	    cargarPersonal(carpeta + "/personal.txt");
+	    cargarEstaciones(carpeta + "/estaciones.txt");
+	    cargarMediciones(carpeta + "/mediciones.txt");
+	}
+	
+	//guarda la red completa en un unico fichero serializado, al ser un solo stream, las mediciones compartidas entre Red y Estacion se escriben una
+	//sola vez y el alias se conserva al recuperarlas
+	public void copiarFicheroRed(String dir) throws IOException {
+
+	    FileOutputStream f = new FileOutputStream(dir);
+	    ObjectOutputStream o = new ObjectOutputStream(f);
+	    o.writeObject((Red) this); 
+	    o.close();
+	    f.close();
+	}
+
+	//es static porque cuando se llama todavia no existe una Red, se esta creando
+	public static Red leerFicheroRed(String dir) throws ClassNotFoundException, IOException {
+
+		FileInputStream f = new FileInputStream(dir);
+		ObjectInputStream o = new ObjectInputStream(f);
+	    Red r = (Red) o.readObject();
+	    o.close();
+	    f.close();
+	    return r;
+	}	
+	
 	public TipoContaminante[] getTiposContaminante() {
 		return tiposContaminante;
 	}

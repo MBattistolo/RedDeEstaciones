@@ -1,0 +1,2 @@
+PM25;Material particulado 2.5;0.0;37.0
+PM10;Material particulado 10;0.0;75.0
