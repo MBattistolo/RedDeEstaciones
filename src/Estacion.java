@@ -1,7 +1,11 @@
 import java.time.LocalDate;
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Estacion {
+public class Estacion implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
     private String codigo;
     private String nombre;
     private String comuna;
@@ -59,5 +63,14 @@ public class Estacion {
 
     public Medicion[] getMediciones() {
         return mediciones;
+    }
+    
+    @Override
+    public String toString() {
+        return "Codigo: " + codigo
+                + "\nNombre: " + nombre
+                + "\nComuna: " + comuna
+                + "\nFecha de instalacion: " + fechaInstalacion
+                + "\nCantidad de ediciones registradas: " + mediciones.length;
     }
 }

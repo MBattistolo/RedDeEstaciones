@@ -1,5 +1,9 @@
-public class Personal {
+import java.io.Serializable;
+
+public class Personal implements Serializable{
  
+	private static final long serialVersionUID = 1L;
+	
     private String tipoDocumento;
     private String numeroDocumento;
     private String nombre;
@@ -8,16 +12,16 @@ public class Personal {
     private String direccion;
     private String telefono;
 
-//Constructor
-public Personal(String tipoDocumento, String numeroDocumento, String nombre, String apellido, char genero, String direccion, String telefono) {
-        this.tipoDocumento = tipoDocumento;
-        this.numeroDocumento = numeroDocumento;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.genero = genero;
-        this.direccion = direccion;
-        this.telefono = telefono;
-    }
+	//Constructor
+	public Personal(String tipoDocumento, String numeroDocumento, String nombre, String apellido, char genero, String direccion, String telefono) {
+	        this.tipoDocumento = tipoDocumento;
+	        this.numeroDocumento = numeroDocumento;
+	        this.nombre = nombre;
+	        this.apellido = apellido;
+	        this.genero = genero;
+	        this.direccion = direccion;
+	        this.telefono = telefono;
+	    }
 
 //getters
 
@@ -55,5 +59,15 @@ public Personal(String tipoDocumento, String numeroDocumento, String nombre, Str
  
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+    
+    @Override
+    public String toString() {
+        return "Tipo de documento: " + tipoDocumento
+                + "\nNumero de documento: " + numeroDocumento
+                + "\nNombre: " + nombre + " " + apellido
+                + "\nGenero: " + genero
+                + "\nDireccion: " + direccion
+                + "\nTelefono: " + telefono;
     }
 }

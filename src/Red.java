@@ -1,7 +1,10 @@
 import java.time.LocalDate;
 import java.util.*;
+import java.io.Serializable;
 
-public class Red {
+public class Red implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private TipoContaminante[] tiposContaminante;
 	private Estacion[] estaciones;
@@ -368,5 +371,13 @@ public class Red {
 
 	public Personal[] getPersonal() {
 		return personal;
+	}
+	
+	@Override
+	public String toString() {
+	    return "Cantidad de tipos de contaminante: " + tiposContaminante.length
+	            + "\nCantidad de estaciones: " + estaciones.length
+	            + "\nCantidad de mediciones: " + mediciones.length
+	            + "\nCantidad del personal: " + personal.length;
 	}
 }

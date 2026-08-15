@@ -1,6 +1,9 @@
 import java.time.LocalDate;
 
-public class MedicionRuido  extends Medicion {
+public class MedicionRuido extends Medicion {
+	
+	private static final long serialVersionUID = 1L;
+	
     private Jornada jornada;
 
     public MedicionRuido(String codigo, Personal tecnicoRegistro, LocalDate fecha, double valorMedido, Jornada jornada) {

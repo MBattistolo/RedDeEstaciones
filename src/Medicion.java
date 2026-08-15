@@ -1,6 +1,10 @@
 import java.time.LocalDate;
+import java.io.Serializable;
 
 public abstract class Medicion {
+	
+	private static final long serialVersionUID = 1L;
+	
     protected String codigo;
     protected Personal tecnicoRegistro;
     protected LocalDate fecha;

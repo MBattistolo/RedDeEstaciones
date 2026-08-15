@@ -1,6 +1,9 @@
 import java.time.LocalDate;
 
 public class MedicionAire extends Medicion {
+	
+	private static final long serialVersionUID = 1L;
+	
     private TipoContaminante tipoContaminante;
 
     public MedicionAire(String codigo, Personal tecnicoRegistro, LocalDate fecha, double valorMedido, TipoContaminante tipoContaminante) {
