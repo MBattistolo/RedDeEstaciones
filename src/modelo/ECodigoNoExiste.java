@@ -1,3 +1,4 @@
+package modelo;
 public class ECodigoNoExiste extends Exception{
 	
 	private static final long serialVersionUID = 1L;

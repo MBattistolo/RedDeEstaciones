@@ -1,3 +1,4 @@
+package modelo;
 import java.time.LocalDate;
 import java.io.Serializable;
 import java.util.Arrays;

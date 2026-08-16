@@ -1,7 +1,8 @@
+package modelo;
 import java.time.LocalDate;
 import java.io.Serializable;
 
-public abstract class Medicion {
+public abstract class Medicion implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	

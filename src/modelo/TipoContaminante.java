@@ -1,3 +1,4 @@
+package modelo;
 import java.io.Serializable;
 
 public class TipoContaminante implements Serializable{
