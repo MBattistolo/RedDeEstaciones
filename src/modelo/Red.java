@@ -182,6 +182,7 @@ public class Red implements Serializable{
 		}
 		//para este segundo bloque hacemos la validación correspondiente a la determinación de si este tipo de contaminante existe en una medición 
 		//concreta
+		
 		for(int j = 0; j<mediciones.length;j++) {
 			if (mediciones[j] instanceof MedicionAire) {
 				MedicionAire ma = (MedicionAire) mediciones[j];
@@ -224,6 +225,7 @@ public class Red implements Serializable{
 				auxM[k] = mediciones[j];
 				k++;
 			}
+			 
 		}
 		//al final lo que queda es lo que se reasigna a mediciones, esto ya que las mediciones que dieron null es porque no estaban en dicha
 		//estación y no deberían ser eliminadas ya que pertenecen a otras
@@ -234,11 +236,13 @@ public class Red implements Serializable{
 		//voy a excluir dicho indice de la reasignación en el arreglo estaciones, cabe resaltar que esto se hace usando un arreglo auxiliar de 
 		//tamaño -1 al de estaciones para que al copiar el arreglo nos aseguremos de que no incluimos un objeto que en este caso es el que borramos
 		Estacion[] aux = new Estacion[estaciones.length-1];
-		k = 0;
+		k = 0; 
 		for (int j = 0; j<estaciones.length;j++) {
-			if (j!=i) {
+			// i es el índice de la estación a borrar
+			if (j!=i){
 				aux[k] = estaciones[j];
 				k++;
+				//k termina siendo el número de estaciones que van a quedar existiendo tras eliminar de las j originales que había
 			}
 		}
 		estaciones = aux;	
@@ -282,21 +286,23 @@ public class Red implements Serializable{
 		if (i==null) {
 			throw new ECodigoNoExiste("medicion", codigo);
 		}
-		
-		//este for each se encarga de eliminar la medición de la o las estaciones donde este presente, con esto damos a luz a otro supuesto
-		//y es que una misma medición puede estar en más de una estación a la vez
-		for (Estacion e : estaciones) {
-			Integer idx = e.buscarMedicion(codigo);
-			if(idx!=null) {
-				e.eliminarMedicion(codigo);
+			
+		// además de eliminar la medición del arreglo de Red, se debe eliminar también del arreglo de mediciones de la estación en la que este	
+		int j = 0;
+		boolean eliminada = false;
+		while(j<estaciones.length && !eliminada) {
+			if(estaciones[j].buscarMedicion(codigo) != null) {
+				estaciones[j].eliminarMedicion(codigo);
+				eliminada = true;
 			}
-		}	
+			j++;
+		}
 		
 		Medicion[] aux = new Medicion[mediciones.length-1];
 		int k = 0;
-		for (int j = 0; j<mediciones.length;j++) {
-			if(j!=i) {
-				aux[k] = mediciones[j];
+		for (int w = 0; w<mediciones.length;w++) {
+			if(w!=i) {
+				aux[k] = mediciones[w];
 				k++;
 			}
 		}
