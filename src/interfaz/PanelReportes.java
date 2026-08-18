@@ -16,7 +16,7 @@ public class PanelReportes extends JPanel implements Refrescable {
 
 	private Red red;
 	private JTextArea areaResultado = new JTextArea();
-	private JComboBox<TipoContaminante> cmbContaminante = new JComboBox<>();
+	private JComboBox<String> cmbContaminante = new JComboBox<>();
 
 	PanelReportes(Red red) {
 
@@ -98,7 +98,7 @@ public class PanelReportes extends JPanel implements Refrescable {
 
 		cmbContaminante.removeAllItems();
 		for (TipoContaminante t : red.getTiposContaminante()) {
-			cmbContaminante.addItem(t);
+			cmbContaminante.addItem(t.getCodigo());
 		}
 	}
 }
