@@ -17,7 +17,6 @@ public class PanelReportes extends JPanel implements Refrescable {
 	private Red red;
 	private JTextArea areaResultado = new JTextArea();
 	private JComboBox<TipoContaminante> cmbContaminante = new JComboBox<>();
-	private JComboBox<String> cmbCodigoContaminante = new JComboBox<>();
 
 	PanelReportes(Red red) {
 
@@ -59,14 +58,14 @@ public class PanelReportes extends JPanel implements Refrescable {
 		barra.add(btnInventario);
 		barra.add(btnCriticas);
 		barra.add(new JLabel("  Contaminante:"));
-		barra.add(cmbCodigoContaminante);
+		barra.add(cmbContaminante);
 		barra.add(btnPorContaminante);
 		return barra;
 	}
 
 	private void porContaminante() {
 
-		TipoContaminante tc = red.getTiposContaminante()[red.buscarTipoContaminante((String) cmbCodigoContaminante.getSelectedItem())];
+		TipoContaminante tc = (TipoContaminante) cmbContaminante.getSelectedItem();
 
 		if (tc == null) {
 			Dialogos.error(this, "No hay contaminantes registrados");
@@ -97,9 +96,9 @@ public class PanelReportes extends JPanel implements Refrescable {
 
 	public void refrescar() {
 
-		cmbCodigoContaminante.removeAllItems();
+		cmbContaminante.removeAllItems();
 		for (TipoContaminante t : red.getTiposContaminante()) {
-			cmbCodigoContaminante.addItem(t.getCodigo());
+			cmbContaminante.addItem(t);
 		}
 	}
 }
