@@ -45,11 +45,11 @@ preserva esa identidad porque todo se escribe sobre un único stream.
 **Estrategia de borrado según el tipo de relación.** No todos los `eliminar`
 se comportan igual, y la diferencia sigue el diagrama:
 
-| Se elimina | Estrategia | Razón |
-|---|---|---|
-| Estación | **cascada** | la medición pertenece a la estación; sin ella pierde su contexto físico |
-| Personal | **bloqueo** | la medición solo lo referencia; el histórico debe conservar quién la tomó |
-| Tipo de contaminante | **bloqueo** | su rango se necesita para poder evaluar la criticidad |
+| Se elimina | Razón |
+|---|---|
+| Estación | la medición pertenece a la estación; sin ella pierde su contexto físico |
+| Personal | la medición solo lo referencia; el histórico debe conservar quién la tomó |
+| Tipo de contaminante | su rango se necesita para poder evaluar la criticidad |
 
 **Códigos únicos.** Los cinco métodos de adición validan que el código no
 exista previamente. Eso garantiza que un código identifica un solo objeto y que
