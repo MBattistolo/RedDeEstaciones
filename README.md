@@ -11,10 +11,10 @@ Se tiene registro del personal técnico que trabaja en la red junto a la informa
 
 ## Modelo del dominio
 
-**Estaciones.** Puntos fijos de monitoreo, identificados por código y ubicados
+**Estaciones:** Puntos fijos de monitoreo, identificados por código y ubicados
 en una comuna. Cada una acumula el histórico de mediciones que ha registrado.
 
-**Mediciones.** Toda medición guarda quién la registró, cuándo, y el valor
+**Mediciones:** Toda medición guarda quién la registró, cuándo, y el valor
 medido. Existen dos tipos, y cada uno define su propio criterio de criticidad:
 
 | Tipo | Dato adicional | Es crítica cuando |
@@ -26,47 +26,43 @@ Ese criterio se resuelve por polimorfismo: `Medicion` declara `critica()` como
 abstracto y cada subclase lo implementa a su manera, de modo que la red puede
 evaluar cualquier medición sin preguntar de qué tipo es.
 
-**Tipos de contaminante.** Catálogo de referencia con los valores mínimo y
+**Tipos de contaminante:** Catálogo de referencia con los valores mínimo y
 máximo permitidos por la norma. Ejemplo: PM2.5 entre 0 y 37 µg/m³.
 
-**Personal técnico.** Quienes toman las mediciones. Cada medición conserva la
+**Personal técnico:** Quienes toman las mediciones. Cada medición conserva la
 referencia a su autor.
 
 ---
 
 ## Decisiones de diseño
 
-**Referencia compartida.** Una medición vive simultáneamente en el arreglo de
+**Referencia compartida:** Una medición vive simultáneamente en el arreglo de
 `Red` y en el de su `Estacion`, pero es **un solo objeto** referenciado dos
 veces, no una copia. `Red` es la única clase que crea o elimina mediciones, y
-lo hace en ambos arreglos dentro de la misma operación. La serialización
-preserva esa identidad porque todo se escribe sobre un único stream.
+lo hace en ambos arreglos dentro de la misma operación.
 
-**Estrategia de borrado según el tipo de relación.** No todos los `eliminar`
+**Estrategia de borrado según el tipo de relación** No todos los `eliminar`
 se comportan igual, y la diferencia sigue el diagrama:
 
 | Se elimina | Razón |
 |---|---|
-| Estación | la medición pertenece a la estación; sin ella pierde su contexto físico |
-| Personal | la medición solo lo referencia; el histórico debe conservar quién la tomó |
+| Estación | la medición pertenece a la estación, sin ella pierde su contexto físico |
+| Personal | la medición solo lo referencia, el histórico debe conservar quién la tomó |
 | Tipo de contaminante | su rango se necesita para poder evaluar la criticidad |
 
-**Códigos únicos.** Los cinco métodos de adición validan que el código no
-exista previamente. Eso garantiza que un código identifica un solo objeto y que
-las búsquedas nunca dejen registros inalcanzables.
-
-**Validación centralizada.** Las clases del modelo no imprimen ni informan
-errores: lanzan excepciones. La capa de interfaz decide cómo presentarlas.
+**Códigos únicos:** Los cinco métodos de adición validan que el código no
+exista previamente, eso garantiza que un código identifica un solo objeto y que
+las búsquedas nunca dejen registros inalcanzables
 
 ---
 
 ## Cómo correrlo
 
-1. Clonar el repositorio.
+1. Clonar el repositorio
 2. En Eclipse: **File → Import → Existing Projects into Workspace** y
-   seleccionar la carpeta clonada.
-3. Verificar que `datos/` quede en la **raíz del proyecto**, al lado de `src/`.
-4. Ejecutar `src/Main.java` (clic derecho → Run As → Java Application).
+   seleccionar la carpeta clonada
+3. Verificar que `datos/` quede en la **raíz del proyecto**, al lado de `src/`
+4. Ejecutar `src/Main.java`
 
 ### Puntos de entrada
 
