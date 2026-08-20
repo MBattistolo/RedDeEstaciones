@@ -10,6 +10,8 @@ public class Personal implements Serializable{
     private String nombre;
     private String apellido;
     private char genero;
+    //char y no enum porque el genero solo se almacena, ninguna regla del sistema depende de el, en el caso de Jornada si es enum porque critica() 
+    //lo evalua
     private String direccion;
     private String telefono;
 
