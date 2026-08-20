@@ -376,7 +376,7 @@ public class Red implements Serializable{
 	}
 
 	
-	//en esta seccion van los cuatro lectores de ficheros de texto. todos son privados, porque solo tiene sentido llamarlos desde cargarDesdeTexto,
+	//en esta seccion van los cuatro lectores de ficheros de texto. todos son privados, porque solo tienen sentido llamados desde cargarDesdeTexto,
 	//que garantiza el orden, si se cargaran las mediciones antes que el personal o los contaminantes, todas las, lineas rebotarian porque 
 	//referencian objetos que aun no existen. los tres primeros, comparten el mismo esqueleto: leer linea, saltar si esta vacia, partir por ; y 
 	//delegar en el add correspondiente. el lector no valida ni crea objetos, de eso se encarga el add
